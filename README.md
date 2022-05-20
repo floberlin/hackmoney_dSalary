@@ -10,7 +10,7 @@ Arbitrum Rinkeby: 0xDF3047d476C892bB3C8339723aC86Ce570291310
 
 Polygon Mumbai: 0xDF3047d476C892bB3C8339723aC86Ce570291310
 
-### MVP GUI is available at: [https://floberlin.github.io](https://floberlin.github.io) and [ipfs://bafybeibat5e26r24pwrtcdutn2grtuxbbfalxr6z3g6wfpgs7r4265jsty](https://bafybeibat5e26r24pwrtcdutn2grtuxbbfalxr6z3g6wfpgs7r4265jsty.ipfs.dweb.link)
+### MVP GUI is available at: [https://floberlin.github.io](https://floberlin.github.io)
 
 
 Start the GUI:

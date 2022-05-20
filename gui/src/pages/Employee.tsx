@@ -200,7 +200,7 @@ async function signMessage() {
           <IonCard><IonButton onClick={() => _getEmployee()}>Check Employment Status</IonButton></IonCard>
 
           
-          <IonCard><IonButton onClick={() => {reset();setAddress("Connect Wallet")}}>Withdraw your Salary</IonButton></IonCard><br/>
+          <IonCard><IonButton onClick={() => {_withdraw()}}>Withdraw your Salary</IonButton></IonCard><br/>
           <IonCard><IonButton onClick={async () => setipfsContent(await _getIPFSContent(ipfsCID))}>Get your work agreements details</IonButton>
           <IonInput value={ipfsCID as any} placeholder="Enter your IPFS CID" onIonChange={e => setipfsCID(e.detail.value!)} clearInput></IonInput></IonCard><br/>
           <IonCard><IonButton onClick={() => _revokeRoleEmployee()}>Quit Job</IonButton></IonCard>
