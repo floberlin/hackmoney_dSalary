@@ -82,10 +82,6 @@ async function switchToPolygonMumbai() {
 }
 
 
-
-
-
-
 const Employer: React.FC = () => {
 
 const web3Modal = new Web3Modal({
@@ -101,10 +97,8 @@ const [addrInput, setaddrInput] = useState<any>();
 const [ipfsInput, setipfsInput] = useState<any>();
 const [salaryInput, setsalaryInput] = useState<any>();
 const [periodInput, setperiodInput] = useState<any>();
-
-
- 
-
+const [valInput, setvalInput] = useState<any>();
+const [ipfsHash, setipfs] = useState<any>();
 
 
 
@@ -151,12 +145,14 @@ async function _revokeRoleEmployer() {
 
 async function _getEmployer() {
   await dSalary.getEmployer()
-  .then((result:any) => {alert(result ? "You are an Employer!" : "You are not an Employer!")});
+  .then((result:any) => {alert("You are an Employer!")})
+  .catch((error:any) => {alert("You are not an Employer!")});
 }
 
 async function _getEmployee() {
   await dSalary.getEmployee()
-  .then((result:any) => {alert(result ? "You are an Employee!" : "You are not an Employee!")});
+  .then((result:any) => {alert("You are an Employee!")})
+  .catch((error:any) => {alert("You are not an Employee!")});
 }
 
 async function _grantRoleEmployee() {
@@ -172,8 +168,6 @@ async function _revokeRoleEmployeeExt() {}
 async function _createWA(address:any, data: string, salary:any, period:any) {
   const val:string = (salary * period).toString();
   const options = {value: utils.parseEther(val)}
-
-  console.log(utils.parseEther(val) + "== " + utils.parseEther(salary))
   const config = {
     headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGRFRWMxNjFlOUVCMDFENzEyODhmMEY3ZkVCYzMyMzk2RjFCODhGMTQiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1Mjk2MzM1NDExMiwibmFtZSI6ImRzYWxhcnkifQ.JKspk1CYUK9UTc1dMrEDTfDV53kGouZDIALydzFNc_c` }
 };
@@ -192,17 +186,14 @@ const cid:any =
 .catch(( error ) => {
   return "error"
 })
-console.log(cid);
 await dSalary.createWA(address, cid, utils.parseEther(salary), period, options)
+return cid;
 };
 
 
-async function _withdraw() {
-  await dSalary.withdraw()
-}
-
-async function _deposit() {
-  await dSalary.deposit()
+async function _deposit(val:any) {
+  const options = {value: utils.parseEther(val)}
+  await dSalary.deposit(options)
 
 }
 
@@ -315,9 +306,13 @@ async function ethDecrypt(content: string) {
             <IonInput value={ipfsInput as any} placeholder="Enter Work Aggreement Details (Stored in IPFS)" onIonChange={e => setipfsInput(e.detail.value!)} clearInput></IonInput>
             <IonInput value={salaryInput as any} placeholder="Enter 30-days rolling Salary in Ether" onIonChange={e => setsalaryInput(e.detail.value!)} clearInput></IonInput>
             <IonInput value={periodInput as any} placeholder="Period of the Contract in Months" onIonChange={e => setperiodInput(e.detail.value!)} clearInput></IonInput>
-            <IonButton onClick={() => _createWA(addrInput, ipfsInput, salaryInput, periodInput)}>Create a Work Contract and send it to your new Employee</IonButton><br/>
+            <IonButton onClick={async () => setipfs(await _createWA(addrInput, ipfsInput, salaryInput, periodInput))}>Create a Work Contract and send it to your new Employee</IonButton><br/>
             </IonCard>
-            <IonCard><IonButton onClick={() => _deposit()}>Deposit more Funds</IonButton> </IonCard><br/>
+            <IonCard><IonButton onClick={() => _deposit(valInput)}>Deposit more Funds</IonButton> 
+            <IonInput value={valInput as any} placeholder="Enter Amount in Ether" onIonChange={e => setvalInput(e.detail.value!)} clearInput></IonInput></IonCard><br/>
+            <br/>
+            <br/>
+            <IonInput value={ipfsHash as any} clearInput contentEditable="false" placeholder="IPFS CID"></IonInput>
            
           </>
         ) : (

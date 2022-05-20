@@ -1,10 +1,12 @@
-import { IonButton, IonCol, IonContent, IonGrid, IonHeader, IonPage, IonRow, IonCard, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonInput, IonContent, IonGrid, IonHeader, IonPage, IonRow, IonCard, IonTitle, IonToolbar } from '@ionic/react';
 import Web3Modal from "web3modal";
 import WalletConnectProvider from '@walletconnect/web3-provider/dist/umd/index.min.js';
 import { Contract, providers, utils } from "ethers";
 import { useState } from 'react';
 import { formatAuthMessage } from "../utils";
 import abi from "../abi.json"
+import axios from "axios";
+
 
 
 import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
@@ -89,11 +91,9 @@ const Employee: React.FC = () => {
   
   const [chainId, setChainId] = useState<number>(1);
   const [address, setAddress] = useState<string>("Connect Wallet");
-  const [verified, setVerified] = useState<Boolean>(false);
-  const [addrInput, setaddrInput] = useState<any>();
-  const [ipfsInput, setipfsInput] = useState<any>();
-  const [salaryInput, setsalaryInput] = useState<any>();
-  const [periodInput, setperiodInput] = useState<any>();
+  const [ipfsCID, setipfsCID] = useState<string>("");
+  const [ipfsContent, setipfsContent] = useState<string>("");
+
   
     
   
@@ -123,7 +123,8 @@ const Employee: React.FC = () => {
   
   async function _getEmployee() {
     await dSalary.getEmployee()
-    .then((result:any) => {alert(result ? "You are an Employee!" : "You are not an Employee!")});
+    .then((result:any) => {alert("You are an Employee!")})
+    .catch((error:any) => {alert("You are not an Employee!")});
   }
   
   async function _grantRoleEmployee() {
@@ -149,6 +150,15 @@ const Employee: React.FC = () => {
   async function _getIPFSHash() {
     await dSalary.getIPFSHash()
   
+  }
+
+  async function _getIPFSContent(ipfsCID:string) {
+    const resp =
+    axios.get(
+      'https://dweb.link/ipfs/'+ipfsCID
+    ).then((result:any) => {return (result.data.data as string)})
+    .catch(error => {return "Not found"})
+   return resp;
   }
   
 
@@ -186,9 +196,15 @@ async function signMessage() {
             <IonButton onClick={async () => setAddress(await connect())}>{address}</IonButton>
           <IonButton onClick={signMessage}>Sign Message</IonButton>
           <IonButton onClick={() => {reset();setAddress("Connect Wallet")}}>Disconnect Wallet</IonButton></IonCard>
+
+          <IonCard><IonButton onClick={() => _getEmployee()}>Check Employment Status</IonButton></IonCard>
+
           
-          <IonCard><IonButton onClick={() => {reset();setAddress("Connect Wallet")}}>Withdraw your Salary</IonButton><br/>
-          <IonButton onClick={() => {reset();setAddress("Connect Wallet")}}>Quit Job</IonButton></IonCard>
+          <IonCard><IonButton onClick={() => {reset();setAddress("Connect Wallet")}}>Withdraw your Salary</IonButton></IonCard><br/>
+          <IonCard><IonButton onClick={async () => setipfsContent(await _getIPFSContent(ipfsCID))}>Get your work agreements details</IonButton>
+          <IonInput value={ipfsCID as any} placeholder="Enter your IPFS CID" onIonChange={e => setipfsCID(e.detail.value!)} clearInput></IonInput></IonCard><br/>
+          <IonCard><IonButton onClick={() => _revokeRoleEmployee()}>Quit Job</IonButton></IonCard>
+          <IonInput value={ipfsContent as string} clearInput contentEditable="false" placeholder="IPFS Content"></IonInput>
         </>
       ) : (
         <IonButton onClick={async () => setAddress(await connect())}>{address}</IonButton>
