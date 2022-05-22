@@ -172,6 +172,7 @@ async function _createWA(address:any, data: string, salary:any, period:any) {
     headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGRFRWMxNjFlOUVCMDFENzEyODhmMEY3ZkVCYzMyMzk2RjFCODhGMTQiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1Mjk2MzM1NDExMiwibmFtZSI6ImRzYWxhcnkifQ.JKspk1CYUK9UTc1dMrEDTfDV53kGouZDIALydzFNc_c` }
 };
 
+
 const bodyParameters = {
    "data": data
 };
